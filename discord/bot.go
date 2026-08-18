@@ -86,6 +86,8 @@ func New(cfg *config.Config, database *db.DB, logger *zap.Logger,
 	}
 	if len(aiProviders) > 0 {
 		bot.garminAI = cmd.NewFallbackGarminAI(aiProviders...)
+	} else if cfg.OpenRouterModel == "dummy" {
+		bot.garminAI = &cmd.RealFakeGarminAI{}
 	}
 	if bot.garminAI != nil {
 		memoryPath := cfg.GarminMemoryFile

@@ -141,13 +141,13 @@ func main() {
 		moderationHandler, warnHandler, adminHandler, pingHandler,
 		caseHandler,
 	)
-	if err != nil {
+	/*if err != nil {
 		logger.Fatal("failed to create telegram bot", zap.Error(err))
-	}
+	}*/
 
-	if err := telegramBot.Start(); err != nil {
+	/*if err := telegramBot.Start(); err != nil {
 		logger.Fatal("failed to start telegram bot", zap.Error(err))
-	}
+	}*/
 
 	logger.Info("both bots are running. Press Ctrl+C to stop.")
 

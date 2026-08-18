@@ -794,6 +794,10 @@ func copyGarminAIMessages(messages []cmd.GarminAIMessage) []cmd.GarminAIMessage 
 }
 
 var garminAIEmojis = map[string]discordgo.Emoji{
+	"aura": {ID: "1539042046134980698", Name: "aura", Available: true},
+}
+
+/*map[string]discordgo.Emoji{
 	"painfade":             {ID: "1438530502041665727", Name: "painfade", Animated: true, Available: true},
 	"nosir":                {ID: "1439242164784595055", Name: "nosir", Available: true},
 	"thumbcat":             {ID: "1439308285390880978", Name: "thumbcat", Available: true},
@@ -840,7 +844,7 @@ var garminAIEmojis = map[string]discordgo.Emoji{
 	"emoji_44":             {ID: "1505946247075467366", Name: "emoji_44", Available: true},
 	"glup":                 {ID: "1526939205476028526", Name: "glup", Available: true},
 	"cozystars":            {ID: "1528858301813494001", Name: "cozystars", Available: true},
-}
+}*/
 
 func garminAIEmojiByName(_ *discordgo.Session, _ string, name string) *discordgo.Emoji {
 	name = strings.Trim(strings.ToLower(strings.TrimSpace(name)), ":")
