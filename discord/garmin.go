@@ -2,8 +2,10 @@ package discord
 
 import (
 	"context"
+	"fmt"
 	"net/url"
 	"path/filepath"
+	"regexp"
 	"strconv"
 	"strings"
 	"time"
@@ -21,9 +23,9 @@ const (
 	garminAIContextTTL = 2 * time.Hour
 	garminAIAmbientTTL = 2 * time.Minute
 	garminAIContextMax = 500
-	garminAIExchanges  = 8
+	garminAIExchanges  = 20
 	garminAITimeout    = 45 * time.Second
-	garminAIMaxImages  = 4
+	garminAIMaxImages  = 20
 )
 
 type garminAIContext struct {
@@ -34,6 +36,11 @@ type garminAIContext struct {
 	expiresAt    time.Time
 	ambientUntil time.Time
 }
+
+var (
+	garminAICustomEmojiPattern     = regexp.MustCompile(`<a?:([A-Za-z0-9_~]+):(\d+)>`)
+	garminAICustomShortcodePattern = regexp.MustCompile(`:([A-Za-z_~][A-Za-z0-9_~]{1,63}):`)
+)
 
 func (b *Bot) handleGarminAI(s *discordgo.Session, m *discordgo.MessageCreate, messages []cmd.GarminAIMessage) {
 	b.cancelGarminAIAmbient(m)
@@ -126,11 +133,17 @@ func (b *Bot) handleGarminAIWithMode(s *discordgo.Session, m *discordgo.MessageC
 	}
 	result.Answer = enforceGarminChannelReply(garminRedirectChannelID(s, m.ChannelID), result.Answer)
 
+	renderedAnswer := renderGarminGuildEmojis(s, m.GuildID, result.Answer)
+	if strings.TrimSpace(renderedAnswer) == "" && strings.TrimSpace(result.Answer) != "" {
+		renderedAnswer = "i couldn't find that emoji."
+	}
+	result.Answer = renderedAnswer
 	conversation := append(copyGarminAIMessages(messages), cmd.GarminAIMessage{Role: "assistant", Content: result.Answer})
+	formatted := formatAndTruncateGarminAIResult(result)
 	if ambient {
-		b.sendGarminAmbientReply(s, m, formatAndTruncateGarminAIResult(result), conversation, ambientToken)
+		b.sendGarminAmbientReply(s, m, formatted, conversation, ambientToken)
 	} else {
-		b.sendGarminReplyAndRememberIfVisible(s, m, formatAndTruncateGarminAIResult(result), conversation)
+		b.sendGarminReplyAndRememberIfVisible(s, m, formatted, conversation)
 	}
 }
 
@@ -783,6 +796,104 @@ func (b *Bot) storeGarminAIContextLocked(messageID string, m *discordgo.MessageC
 		b.garminAIContexts[messageID] = context
 	}
 	b.garminAIUserContexts[userKey] = context
+}
+
+func addGarminImagesToLatestUser(messages []cmd.GarminAIMessage, imageURLs []string) {
+	if len(imageURLs) == 0 {
+		return
+	}
+	for i := len(messages) - 1; i >= 0; i-- {
+		if messages[i].Role == "user" {
+			messages[i].Images = uniqueGarminAIImageURLs(append(append([]string(nil), messages[i].Images...), imageURLs...), garminAIMaxImages)
+			return
+		}
+	}
+}
+
+func garminAIEmojiByName(s *discordgo.Session, guildID, name string) (*discordgo.Emoji, bool) {
+	emojis, err := garminLiveGuildEmojis(s, guildID)
+	if err != nil {
+		return nil, false
+	}
+	return garminEmojiByName(emojis, name)
+}
+
+func garminLiveGuildEmojis(s *discordgo.Session, guildID string) ([]*discordgo.Emoji, error) {
+	if s != nil && guildID != "" && s.Ratelimiter != nil && s.Client != nil {
+		if emojis, err := s.GuildEmojis(guildID); err == nil {
+			return emojis, nil
+		}
+	}
+	return garminGuildEmojis(s, guildID)
+}
+
+func garminGuildEmojis(s *discordgo.Session, guildID string) ([]*discordgo.Emoji, error) {
+	if s == nil || guildID == "" {
+		return nil, fmt.Errorf("Discord guild emojis are unavailable")
+	}
+	if s.State != nil {
+		if guild, err := s.State.Guild(guildID); err == nil {
+			return guild.Emojis, nil
+		}
+	}
+	if s.Ratelimiter == nil || s.Client == nil {
+		return nil, fmt.Errorf("Discord guild emojis are unavailable")
+	}
+	return s.GuildEmojis(guildID)
+}
+
+func garminEmojiByName(emojis []*discordgo.Emoji, name string) (*discordgo.Emoji, bool) {
+	name = strings.Trim(strings.TrimSpace(name), ":")
+	for _, emoji := range emojis {
+		if emoji != nil && emoji.ID != "" && emoji.Available && strings.EqualFold(emoji.Name, name) {
+			return emoji, true
+		}
+	}
+	return nil, false
+}
+
+func garminEmojiImageURL(emoji *discordgo.Emoji) string {
+	extension := "png"
+	if emoji.Animated {
+		extension = "gif"
+	}
+	return fmt.Sprintf("https://cdn.discordapp.com/emojis/%s.%s?size=128&quality=lossless", emoji.ID, extension)
+}
+
+func renderGarminGuildEmojis(s *discordgo.Session, guildID, answer string) string {
+	if !garminAICustomEmojiPattern.MatchString(answer) && !garminAICustomShortcodePattern.MatchString(answer) {
+		return answer
+	}
+	emojis, err := garminLiveGuildEmojis(s, guildID)
+	if err != nil {
+		answer = garminAICustomEmojiPattern.ReplaceAllString(answer, "")
+		answer = garminAICustomShortcodePattern.ReplaceAllString(answer, "")
+		return strings.TrimSpace(answer)
+	}
+
+	placeholders := make([]string, 0)
+	replaceEmoji := func(name string) string {
+		emoji, ok := garminEmojiByName(emojis, name)
+		if !ok {
+			return ""
+		}
+		placeholder := fmt.Sprintf("\x00GARMIN_EMOJI_%d\x00", len(placeholders))
+		placeholders = append(placeholders, emoji.MessageFormat())
+		return placeholder
+	}
+	answer = garminAICustomEmojiPattern.ReplaceAllStringFunc(answer, func(markup string) string {
+		return replaceEmoji(garminAICustomEmojiPattern.FindStringSubmatch(markup)[1])
+	})
+	answer = garminAICustomShortcodePattern.ReplaceAllStringFunc(answer, func(shortcode string) string {
+		return replaceEmoji(garminAICustomShortcodePattern.FindStringSubmatch(shortcode)[1])
+	})
+	for i, emoji := range placeholders {
+		answer = strings.ReplaceAll(answer, fmt.Sprintf("\x00GARMIN_EMOJI_%d\x00", i), emoji)
+	}
+	for strings.Contains(answer, "  ") {
+		answer = strings.ReplaceAll(answer, "  ", " ")
+	}
+	return strings.TrimSpace(answer)
 }
 
 func copyGarminAIMessages(messages []cmd.GarminAIMessage) []cmd.GarminAIMessage {
