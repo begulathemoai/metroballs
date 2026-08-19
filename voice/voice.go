@@ -1,3 +1,15 @@
+/// this is my manifesto
+// basically you can't get voice support without doing a bunch of bullshit
+// cuz this bot is built with discordgo v0.29.0 which is old
+// so no DAVE support. but ! there's a fork that adds DAVE support
+// and it's based on master. which is new. so either you somehow downgrade the fork to v0.29.0,
+// or you deal with the fact that a bunch of method signatures changed, which means you have to
+// at least touch up a big part of the bot (and i'm trying to change as little of the internal code as possible);
+// or you implement DAVE yourself but you would have to
+// play around with the internals of discordgo which means doing a fork of v0.29.0 just for metrobot
+//
+// i'm shit enough in go to understand what the solution is gonna be
+
 package voice
 
 import (
@@ -55,6 +67,13 @@ func (v *Voice) DoConnect(s *discordgo.Session, i *discordgo.InteractionCreate, 
 		return fmt.Errorf("returned \"channel_id\" is not a string")
 	}
 
+	s.InteractionRespond(i.Interaction, &discordgo.InteractionResponse{
+		Type: discordgo.InteractionResponseChannelMessageWithSource,
+		Data: &discordgo.InteractionResponseData{
+			Content: "connected (i will keep getting disconnected & reconnected as long as e2ee/dave isn't added)",
+			Flags:   discordgo.MessageFlagsEphemeral,
+		},
+	})
 	return nil
 }
 

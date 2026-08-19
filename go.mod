@@ -12,7 +12,15 @@ require (
 	modernc.org/sqlite v1.53.0
 )
 
+// fork that introduces DAVE
+//replace github.com/bwmarrin/discordgo => github.com/yeongaori/discordgo-fork v0.0.0-20260627070107-c65bda26a53b
+// this is a bad idea cuz the version used by upstream is a lot different from master so a lot of function signatures change and i'm trying to stay close to upstream
+// guess i'll maybe have to pull the voice changes separately ? idk
+// how would i even go about doing this
+// CAN METROLIST STOP DOING THE 1-MIN BUG FOR 2 MINUTES
+
 require (
+	github.com/cloudflare/circl v1.6.3 // indirect
 	github.com/dustin/go-humanize v1.0.1 // indirect
 	github.com/google/go-querystring v1.2.0 // indirect
 	github.com/google/uuid v1.6.0 // indirect
