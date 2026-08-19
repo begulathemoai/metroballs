@@ -3,7 +3,7 @@ package cmd
 import (
 	"fmt"
 
-	"github.com/MetrolistGroup/metrobot/db"
+	"github.com/begulathemoai/metroballs/db"
 )
 
 type AdminHandler struct {

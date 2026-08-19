@@ -5,9 +5,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/MetrolistGroup/metrobot/db"
-	"github.com/MetrolistGroup/metrobot/internal/decancer"
-	"github.com/MetrolistGroup/metrobot/util"
+	"github.com/begulathemoai/metroballs/db"
+	"github.com/begulathemoai/metroballs/internal/decancer"
+	"github.com/begulathemoai/metroballs/util"
 )
 
 // Platform constants to avoid hardcoded strings and improve maintainability

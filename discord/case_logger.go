@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/MetrolistGroup/metrobot/db"
+	"github.com/begulathemoai/metroballs/db"
 	"github.com/bwmarrin/discordgo"
 	"go.uber.org/zap"
 )

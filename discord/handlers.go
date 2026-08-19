@@ -8,9 +8,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/MetrolistGroup/metrobot/cmd"
-	"github.com/MetrolistGroup/metrobot/internal/decancer"
-	"github.com/MetrolistGroup/metrobot/util"
+	"github.com/begulathemoai/metroballs/cmd"
+	"github.com/begulathemoai/metroballs/internal/decancer"
+	"github.com/begulathemoai/metroballs/util"
 	"github.com/bwmarrin/discordgo"
 	"go.uber.org/zap"
 )
@@ -107,6 +107,8 @@ func (b *Bot) onInteractionCreate(s *discordgo.Session, i *discordgo.Interaction
 		b.handleScanReactions(s, i, callerID)
 	case "refreshstarboard":
 		b.handleRefreshStarboard(s, i, callerID)
+	case "connect":
+		b.Voice.DoConnect(s, i, callerID)
 	}
 }
 

@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/MetrolistGroup/metrobot/config"
+	"github.com/begulathemoai/metroballs/config"
 	"github.com/bwmarrin/discordgo"
 )
 

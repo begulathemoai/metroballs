@@ -5,8 +5,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/MetrolistGroup/metrobot/config"
-	gh "github.com/MetrolistGroup/metrobot/github"
+	"github.com/begulathemoai/metroballs/config"
+	gh "github.com/begulathemoai/metroballs/github"
 )
 
 type ActionsHandler struct {

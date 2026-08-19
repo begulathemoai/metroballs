@@ -47,7 +47,7 @@ func TestOpenRouterClientUsesCapableRouteByDefault(t *testing.T) {
 	if request.Provider == nil || request.Provider.ZDR || request.Provider.DataCollection != "deny" || !request.Provider.RequireParameters || request.Provider.Sort.By != "throughput" || request.Provider.Sort.Partition != "none" {
 		t.Errorf("provider routing = %#v", request.Provider)
 	}
-	if referer != "https://github.com/MetrolistGroup/metrobot" || title != "Metrobot" {
+	if referer != "https://github.com/begulathemoai/metroballs" || title != "Metrobot" {
 		t.Errorf("OpenRouter attribution headers = (%q, %q)", referer, title)
 	}
 }

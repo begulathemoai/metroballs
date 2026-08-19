@@ -12,7 +12,7 @@ import (
 	"unicode"
 	"unicode/utf8"
 
-	"github.com/MetrolistGroup/metrobot/cmd"
+	"github.com/begulathemoai/metroballs/cmd"
 	"github.com/bwmarrin/discordgo"
 	"go.uber.org/zap"
 )
@@ -902,68 +902,6 @@ func copyGarminAIMessages(messages []cmd.GarminAIMessage) []cmd.GarminAIMessage 
 		copied[index].Images = append([]string(nil), copied[index].Images...)
 	}
 	return copied
-}
-
-var garminAIEmojis = map[string]discordgo.Emoji{
-	"aura": {ID: "1539042046134980698", Name: "aura", Available: true},
-}
-
-/*map[string]discordgo.Emoji{
-	"painfade":             {ID: "1438530502041665727", Name: "painfade", Animated: true, Available: true},
-	"nosir":                {ID: "1439242164784595055", Name: "nosir", Available: true},
-	"thumbcat":             {ID: "1439308285390880978", Name: "thumbcat", Available: true},
-	"hm":                   {ID: "1439319659106013294", Name: "hm", Available: true},
-	"thonk":                {ID: "1439346894286360607", Name: "thonk", Available: true},
-	"wires":                {ID: "1441063797656911952", Name: "wires", Available: true},
-	"waah":                 {ID: "1444970411707203745", Name: "waah", Available: true},
-	"monkthonk":            {ID: "1464004867759538429", Name: "monkthonk", Available: true},
-	"metrolist":            {ID: "1465017326100545792", Name: "metrolist", Available: true},
-	"bwaa":                 {ID: "1468220355947528202", Name: "bwaa", Available: true},
-	"skullq":               {ID: "1473960170282549320", Name: "skullq", Available: true},
-	"crine":                {ID: "1479034017629339748", Name: "crine", Available: true},
-	"brick":                {ID: "1479204945864556594", Name: "brick", Available: true},
-	"catstare":             {ID: "1479884829427368150", Name: "catstare", Available: true},
-	"speed":                {ID: "1479887846935363644", Name: "speed", Available: true},
-	"horror":               {ID: "1479887944230633512", Name: "horror", Available: true},
-	"interesting":          {ID: "1479889081017041056", Name: "interesting", Available: true},
-	"catfuckyou":           {ID: "1479893113391681687", Name: "catfuckyou", Available: true},
-	"catshake":             {ID: "1479893137806721087", Name: "catshake", Available: true},
-	"thumb":                {ID: "1481187881946058922", Name: "thumb", Available: true},
-	"soggy":                {ID: "1481187936765743134", Name: "soggy", Available: true},
-	"trolley":              {ID: "1481188057985187982", Name: "trolley", Available: true},
-	"steamhappy":           {ID: "1481188123101626549", Name: "steamhappy", Available: true},
-	"colonthree":           {ID: "1481188191104139294", Name: "colonthree", Available: true},
-	"trolleyz":             {ID: "1481188261274587217", Name: "trolleyz", Animated: true, Available: true},
-	"partygopher":          {ID: "1481188463561674882", Name: "partygopher", Animated: true, Available: true},
-	"nyaboom":              {ID: "1481188488107004098", Name: "nyaboom", Available: true},
-	"husker":               {ID: "1481188515894267924", Name: "husker", Available: true},
-	"husk":                 {ID: "1481188537935331520", Name: "husk", Available: true},
-	"hu":                   {ID: "1481188560638836908", Name: "hu", Available: true},
-	"blobcatcozy":          {ID: "1481188609251082322", Name: "blobcatcozy", Available: true},
-	"blobcatmorningcoffee": {ID: "1481188685377699945", Name: "blobcatmorningcoffee", Available: true},
-	"snackstare":           {ID: "1481335353523830794", Name: "snackstare", Available: true},
-	"bleh":                 {ID: "1482478193985192059", Name: "bleh", Available: true},
-	"wavey":                {ID: "1488926226918670489", Name: "wavey", Animated: true, Available: true},
-	"dry":                  {ID: "1489623129503436941", Name: "dry", Available: true},
-	"happy":                {ID: "1489623255571501248", Name: "happy", Animated: true, Available: true},
-	"cathug":               {ID: "1489623318620274789", Name: "cathug", Available: true},
-	"metrolist_tomorrow":   {ID: "1489623377403449354", Name: "metrolist_tomorrow", Available: true},
-	"trolleyzoom":          {ID: "1489623472840773753", Name: "trolleyzoom", Animated: true, Available: true},
-	"kekw":                 {ID: "1492860470816669697", Name: "kekw", Available: true},
-	"folk":                 {ID: "1502640041774678057", Name: "folk", Available: true},
-	"emoji_43":             {ID: "1503113745864458341", Name: "emoji_43", Available: true},
-	"emoji_44":             {ID: "1505946247075467366", Name: "emoji_44", Available: true},
-	"glup":                 {ID: "1526939205476028526", Name: "glup", Available: true},
-	"cozystars":            {ID: "1528858301813494001", Name: "cozystars", Available: true},
-}*/
-
-func garminAIEmojiByName(_ *discordgo.Session, _ string, name string) *discordgo.Emoji {
-	name = strings.Trim(strings.ToLower(strings.TrimSpace(name)), ":")
-	emoji, ok := garminAIEmojis[name]
-	if !ok {
-		return nil
-	}
-	return &emoji
 }
 
 func truncateGarminAIResponse(content string) string {

@@ -6,7 +6,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/MetrolistGroup/metrobot/db"
+	"github.com/begulathemoai/metroballs/db"
 )
 
 type fakeModerationConfig struct{}

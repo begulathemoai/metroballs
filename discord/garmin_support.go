@@ -6,7 +6,7 @@ import (
 	"time"
 	"unicode"
 
-	"github.com/MetrolistGroup/metrobot/cmd"
+	"github.com/begulathemoai/metroballs/cmd"
 	"github.com/bwmarrin/discordgo"
 	"go.uber.org/zap"
 )

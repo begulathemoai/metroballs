@@ -12,9 +12,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/MetrolistGroup/metrobot/cmd"
-	"github.com/MetrolistGroup/metrobot/config"
-	"github.com/MetrolistGroup/metrobot/db"
+	"github.com/begulathemoai/metroballs/cmd"
+	"github.com/begulathemoai/metroballs/config"
+	"github.com/begulathemoai/metroballs/db"
 	"github.com/bwmarrin/discordgo"
 )
 

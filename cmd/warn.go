@@ -5,8 +5,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/MetrolistGroup/metrobot/db"
-	"github.com/MetrolistGroup/metrobot/util"
+	"github.com/begulathemoai/metroballs/db"
+	"github.com/begulathemoai/metroballs/util"
 )
 
 type WarnHandler struct {

@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/MetrolistGroup/metrobot/util"
+	"github.com/begulathemoai/metroballs/util"
 	"github.com/bwmarrin/discordgo"
 	"go.uber.org/zap"
 )

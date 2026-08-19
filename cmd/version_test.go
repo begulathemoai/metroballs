@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	gh "github.com/MetrolistGroup/metrobot/github"
+	gh "github.com/begulathemoai/metroballs/github"
 )
 
 func TestSelectReleaseAssetsPrefersOfficialAPKs(t *testing.T) {

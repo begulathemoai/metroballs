@@ -4,9 +4,9 @@ import (
 	"fmt"
 	"strconv"
 
-	"github.com/MetrolistGroup/metrobot/cmd"
-	"github.com/MetrolistGroup/metrobot/config"
-	"github.com/MetrolistGroup/metrobot/db"
+	"github.com/begulathemoai/metroballs/cmd"
+	"github.com/begulathemoai/metroballs/config"
+	"github.com/begulathemoai/metroballs/db"
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"go.uber.org/zap"
 )

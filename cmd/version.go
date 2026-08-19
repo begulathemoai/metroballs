@@ -8,7 +8,7 @@ import (
 	"time"
 	"unicode"
 
-	gh "github.com/MetrolistGroup/metrobot/github"
+	gh "github.com/begulathemoai/metroballs/github"
 )
 
 // titleCase returns s with first rune in title case and the rest lowercased (e.g. "WARNING" -> "Warning").

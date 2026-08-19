@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/MetrolistGroup/metrobot/db"
+	"github.com/begulathemoai/metroballs/db"
 )
 
 // CaseLogger interface for logging cases to Discord

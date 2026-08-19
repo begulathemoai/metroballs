@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/MetrolistGroup/metrobot/db"
+	"github.com/begulathemoai/metroballs/db"
 )
 
 type NotesHandler struct {

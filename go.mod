@@ -1,4 +1,4 @@
-module github.com/MetrolistGroup/metrobot
+module github.com/begulathemoai/metroballs
 
 go 1.26.1
 

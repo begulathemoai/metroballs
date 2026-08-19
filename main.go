@@ -8,13 +8,13 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/MetrolistGroup/metrobot/cmd"
-	"github.com/MetrolistGroup/metrobot/config"
-	"github.com/MetrolistGroup/metrobot/db"
-	"github.com/MetrolistGroup/metrobot/discord"
-	gh "github.com/MetrolistGroup/metrobot/github"
-	"github.com/MetrolistGroup/metrobot/log"
-	"github.com/MetrolistGroup/metrobot/telegram"
+	"github.com/begulathemoai/metroballs/cmd"
+	"github.com/begulathemoai/metroballs/config"
+	"github.com/begulathemoai/metroballs/db"
+	"github.com/begulathemoai/metroballs/discord"
+	gh "github.com/begulathemoai/metroballs/github"
+	"github.com/begulathemoai/metroballs/log"
+	"github.com/begulathemoai/metroballs/telegram"
 	"go.uber.org/zap"
 )
 
@@ -141,13 +141,13 @@ func main() {
 		moderationHandler, warnHandler, adminHandler, pingHandler,
 		caseHandler,
 	)
-	/*if err != nil {
-		logger.Fatal("failed to create telegram bot", zap.Error(err))
-	}*/
 
-	/*if err := telegramBot.Start(); err != nil {
-		logger.Fatal("failed to start telegram bot", zap.Error(err))
-	}*/
+	if err != nil {
+		logger.Warn("failed to create telegram bot", zap.Error(err))
+	} else if err := telegramBot.Start(); err != nil {
+		logger.Warn("failed to start telegram bot", zap.Error(err))
+		telegramBot = nil
+	}
 
 	logger.Info("both bots are running. Press Ctrl+C to stop.")
 
@@ -166,7 +166,10 @@ func main() {
 	logger.Info("all timers stopped")
 
 	discordBot.Stop()
-	telegramBot.Stop()
+	// seg violation solved :thumb:
+	if telegramBot != nil {
+		telegramBot.Stop()
+	}
 	logger.Info("graceful shutdown complete")
 }
 

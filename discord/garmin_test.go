@@ -13,8 +13,8 @@ import (
 	"time"
 	"unicode/utf8"
 
-	"github.com/MetrolistGroup/metrobot/cmd"
-	"github.com/MetrolistGroup/metrobot/db"
+	"github.com/begulathemoai/metroballs/cmd"
+	"github.com/begulathemoai/metroballs/db"
 	"github.com/bwmarrin/discordgo"
 	"go.uber.org/zap"
 )

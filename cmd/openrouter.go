@@ -36,7 +36,7 @@ func newOpenRouterClient(keys []string, model, endpoint string, httpClient *http
 		model,
 		"OpenRouter",
 		map[string]string{
-			"HTTP-Referer":       "https://github.com/MetrolistGroup/metrobot",
+			"HTTP-Referer":       "https://github.com/begulathemoai/metroballs",
 			"X-OpenRouter-Title": "Metrobot",
 		},
 		func(request *chatCompletionRequest) {

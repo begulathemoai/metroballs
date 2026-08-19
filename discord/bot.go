@@ -6,16 +6,18 @@ import (
 	"sync"
 	"time"
 
-	"github.com/MetrolistGroup/metrobot/cmd"
-	"github.com/MetrolistGroup/metrobot/config"
-	"github.com/MetrolistGroup/metrobot/db"
-	gh "github.com/MetrolistGroup/metrobot/github"
+	"github.com/begulathemoai/metroballs/cmd"
+	"github.com/begulathemoai/metroballs/config"
+	"github.com/begulathemoai/metroballs/db"
+	gh "github.com/begulathemoai/metroballs/github"
+	"github.com/begulathemoai/metroballs/voice"
 	"github.com/bwmarrin/discordgo"
 	"go.uber.org/zap"
 )
 
 type Bot struct {
 	Session    *discordgo.Session
+	Voice      *voice.Voice
 	Config     *config.Config
 	DB         *db.DB
 	Logger     *zap.Logger
@@ -49,15 +51,17 @@ func New(cfg *config.Config, database *db.DB, logger *zap.Logger,
 	moderation *cmd.ModerationHandler, warn *cmd.WarnHandler, admin *cmd.AdminHandler, ping *cmd.PingHandler,
 	cases *cmd.CaseHandler,
 ) (*Bot, error) {
+	// we create a discordgo session with the provided token and intents
 	session, err := discordgo.New("Bot " + cfg.DiscordToken)
 	if err != nil {
 		return nil, fmt.Errorf("creating discord session: %w", err)
 	}
 
-	session.Identify.Intents = discordgo.IntentsGuildMessages | discordgo.IntentsGuildMembers | discordgo.IntentsGuildBans | discordgo.IntentsGuildMessageReactions | discordgo.IntentsMessageContent
-
+	session.Identify.Intents = discordgo.IntentsGuildMessages | discordgo.IntentsGuildMembers | discordgo.IntentsGuildBans | discordgo.IntentsGuildMessageReactions | discordgo.IntentsMessageContent | discordgo.IntentsGuildVoiceStates
+	voice_manager := voice.New(session, cfg)
 	bot := &Bot{
 		Session:              session,
+		Voice:                &voice_manager, // i'll make this better later ig
 		Config:               cfg,
 		DB:                   database,
 		Logger:               logger.With(zap.String("platform", "discord")),
@@ -77,6 +81,7 @@ func New(cfg *config.Config, database *db.DB, logger *zap.Logger,
 		garminAIRequests:     make(map[string]map[string]context.CancelFunc),
 		garminAIAmbientBusy:  make(map[string]uint64),
 	}
+	// AI setup (:wilted_rose:)
 	var aiProviders []cmd.GarminAI
 	if len(cfg.OpenRouterAPIKeys) > 0 {
 		aiProviders = append(aiProviders, cmd.NewOpenRouterClient(cfg.OpenRouterAPIKeys, cfg.OpenRouterModel))
@@ -194,6 +199,10 @@ func (b *Bot) registerCommands() error {
 					Required:    true,
 				},
 			},
+		},
+		{
+			Name:        "connect",
+			Description: "Connect to the current voice channel (admin only)",
 		},
 		{
 			Name:        "editnote",

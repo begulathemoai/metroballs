@@ -5,7 +5,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/MetrolistGroup/metrobot/db"
+	"github.com/begulathemoai/metroballs/db"
 )
 
 type fakeWarnConfig struct{}
